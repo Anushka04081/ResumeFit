@@ -1,22 +1,19 @@
+import Hero from "./components/Hero";
+import Navbar from "./components/Navbar";
 import "./App.css";
 
 function App() {
   return (
     <div className="container">
-      <nav>
-        <h2>ResumeFit</h2>
-      </nav>
 
-      <section className="hero">
-        <h1>Analyze Your Resume with AI</h1>
+      <Navbar />
 
-        <p>
-          Get instant feedback, ATS score, and personalized suggestions
-          to improve your resume.
-        </p>
+      <Hero
+  title="Analyze Your Resume with AI"
+  description="Get instant feedback, ATS score, and personalized suggestions to improve your resume."
+  buttonText="Upload Resume"
+/>
 
-        <button>Upload Resume</button>
-      </section>
     </div>
   );
 }
