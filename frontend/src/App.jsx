@@ -1,19 +1,22 @@
-import Hero from "./components/Hero";
-import Navbar from "./components/Navbar";
-import "./App.css";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/")
+      .then((response) => response.json())
+      .then((data) => {
+        setMessage(data.message);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
+  }, []);
+
   return (
-    <div className="container">
-
-      <Navbar />
-
-      <Hero
-  title="Analyze Your Resume with AI"
-  description="Get instant feedback, ATS score, and personalized suggestions to improve your resume."
-  buttonText="Upload Resume"
-/>
-
+    <div>
+      <h1>{message}</h1>
     </div>
   );
 }
