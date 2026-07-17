@@ -1,48 +1,87 @@
 def calculate_score(resume_data):
 
-    score = 0
+    breakdown = {
+        "contact": 0,
+        "skills": 0,
+        "projects": 0,
+        "experience": 0,
+        "education": 0,
+        "achievements": 0
+    }
+
     strengths = []
     improvements = []
+    missing_sections = []
 
-    # Skills (40 points)
+    # ---------------- Contact ----------------
+    if resume_data.get("name"):
+        breakdown["contact"] += 3
+
+    if resume_data.get("email"):
+        breakdown["contact"] += 4
+
+    if resume_data.get("phone"):
+        breakdown["contact"] += 3
+
+    if breakdown["contact"] == 10:
+        strengths.append("Complete contact information")
+    else:
+        improvements.append("Complete your contact information")
+
+    # ---------------- Skills ----------------
     skills = resume_data.get("skills", [])
 
-    if len(skills) >= 5:
-        score += 40
-        strengths.append("Good technical skill set")
-    elif len(skills) > 0:
-        score += 25
-        improvements.append("Add more technical skills")
+    implemented_skills = 0
 
+    for skill in skills:
+        if skill["implemented"]:
+            implemented_skills += 1
 
-    # Projects (25 points)
+    if implemented_skills >= 8:
+        breakdown["skills"] = 20
+        strengths.append("Excellent practical technical skills")
+
+    elif implemented_skills >= 5:
+        breakdown["skills"] = 15
+        strengths.append("Good practical technical skills")
+
+    elif implemented_skills >= 3:
+        breakdown["skills"] = 10
+        strengths.append("Basic practical technical skills")
+        improvements.append("Implement more listed skills in projects")
+
+    elif implemented_skills >= 1:
+        breakdown["skills"] = 5
+        improvements.append("Strengthen technical projects")
+
+    else:
+        improvements.append("Add practical implementation of your skills")
+    # ---------------- Projects ----------------
     projects = resume_data.get("projects", [])
 
     if len(projects) >= 2:
-        score += 25
+        breakdown["projects"] = 20
         strengths.append("Multiple projects included")
 
     elif len(projects) == 1:
-        score += 15
-        strengths.append("Project included")
-        improvements.append("Add more projects")
+        breakdown["projects"] = 10
+        strengths.append("At least one project included")
+        improvements.append("Add one more strong project")
 
     else:
+        missing_sections.append("Projects")
         improvements.append("Add practical projects")
 
-
-    # Education (20 points)
+    # ---------------- Education ----------------
     education = resume_data.get("education", [])
 
-    if len(education) > 0:
-        score += 20
-        strengths.append("Education details provided")
-
+    if education:
+        breakdown["education"] = 10
+        strengths.append("Education section present")
     else:
-        improvements.append("Add education details")
+        missing_sections.append("Education")
 
-
-    # Training/Experience (15 points)
+    # ---------------- Experience ----------------
     experience_keywords = [
         "internship",
         "experience",
@@ -56,15 +95,23 @@ def calculate_score(resume_data):
     )
 
     if has_experience:
-        score += 15
-        strengths.append("Experience mentioned")
-
+        breakdown["experience"] = 20
+        strengths.append("Experience included")
     else:
         improvements.append("Add internship or work experience")
+        missing_sections.append("Experience")
 
+    # ---------------- Achievements ----------------
+    breakdown["achievements"] = 0
+    improvements.append("Add certifications or achievements")
+    missing_sections.append("Achievements")
+
+    overall_score = sum(breakdown.values())
 
     return {
-        "resume_score": score,
+        "overall_score": overall_score,
+        "score_breakdown": breakdown,
         "strengths": strengths,
-        "improvements": improvements
+        "improvements": improvements,
+        "missing_sections": missing_sections
     }

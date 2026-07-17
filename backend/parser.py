@@ -1,5 +1,7 @@
 import re
-
+from skills_database import SKILLS
+from section_parser import extract_sections
+from evidence import check_skill_evidence
 
 def extract_email(text):
     text = text.replace(" @", "@")
@@ -29,7 +31,7 @@ def extract_name(text):
 
         words = before_email.split()
 
-        # Usually first two words are the person's name
+       
         if len(words) >= 2:
             return words[0] + " " + words[1]
 
@@ -38,24 +40,13 @@ def extract_name(text):
 
 def extract_skills(text):
 
-    skills_list = [
-        "C++",
-        "Python",
-        "SQL",
-        "DSA",
-        "Git",
-        "GitHub",
-        "OOP",
-        "DBMS"
-    ]
+    skills = []
 
-    found = []
-
-    for skill in skills_list:
+    for skill in SKILLS:
         if skill.lower() in text.lower():
-            found.append(skill)
+            skills.append(skill)
 
-    return found
+    return skills
 def extract_education(text):
 
     education = []
@@ -75,23 +66,57 @@ def extract_education(text):
     return education
 
 
-def extract_projects(text):
-
+def extract_projects(project_lines):
     projects = []
 
-    if "Student Management System" in text:
-        projects.append("Student Management System")
+    if not project_lines:
+        return projects
+
+    title = project_lines[0].strip()
+
+    projects.append({
+        "title": title,
+        "description": project_lines[1:]
+    })
 
     return projects
 
 
 def parse_resume(text):
 
+    sections = extract_sections(text)
+
+    skills = extract_skills(
+        "\n".join(sections.get("skills", []))
+    )
+    print(skills)
+    print(type(skills[0]))
+
+    projects = extract_projects(
+        sections.get("projects", [])
+    )
+
+    training = sections.get("training", [])
+
+    analyzed_skills = []
+
+    for skill in skills:
+        analyzed_skills.append(
+            check_skill_evidence(
+                skill,
+                projects,
+                training
+            )
+        )
+
     return {
         "name": extract_name(text),
         "email": extract_email(text),
         "phone": extract_phone(text),
-        "skills": extract_skills(text),
-        "education": extract_education(text),
-        "projects": extract_projects(text)
+        "skills": analyzed_skills,
+        "education": extract_education(
+            "\n".join(sections.get("education", []))
+        ),
+        "projects": projects,
+        "training": training
     }

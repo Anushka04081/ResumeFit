@@ -1,3 +1,5 @@
+
+from section_parser import extract_sections
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from pypdf import PdfReader
@@ -7,7 +9,7 @@ from analyzer import calculate_score
 
 app = FastAPI()
 
-# Allow frontend (Vite React) to communicate with backend
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -25,10 +27,18 @@ def home():
 
 
 def clean_text(text):
-    text = text.replace("\n", " ")
+   
     text = text.replace("|", " ")
-    text = " ".join(text.split())
-    return text
+
+    lines = []
+
+    for line in text.split("\n"):
+        line = " ".join(line.split())
+
+        if line:
+            lines.append(line)
+
+    return "\n".join(lines)
 
 
 @app.post("/upload")
@@ -44,6 +54,16 @@ async def upload_resume(file: UploadFile = File(...)):
         text += page.extract_text() or ""
 
     text = clean_text(text)
+    print("=" * 80)
+    print("RAW RESUME TEXT")
+    print(text)
+    print("=" * 80)
+
+    sections = extract_sections(text)
+
+    print("=" * 100)
+    print(sections)
+    print("=" * 100)
 
     resume_data = parse_resume(text)
     analysis = calculate_score(resume_data)
