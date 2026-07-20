@@ -3,6 +3,7 @@ from skills_database import SKILLS
 from section_parser import extract_sections
 from evidence import check_skill_evidence
 
+
 def extract_email(text):
     text = text.replace(" @", "@")
 
@@ -31,7 +32,6 @@ def extract_name(text):
 
         words = before_email.split()
 
-       
         if len(words) >= 2:
             return words[0] + " " + words[1]
 
@@ -47,26 +47,77 @@ def extract_skills(text):
             skills.append(skill)
 
     return skills
-def extract_education(text):
 
+
+import re
+
+def extract_education(education_lines):
     education = []
 
-    keywords = [
-        "B.Tech",
-        "BTech",
-        "CGPA",
-        "CBSE",
-        "ICSE"
-    ]
+    if not education_lines:
+        return education
 
-    for keyword in keywords:
-        if keyword.lower() in text.lower():
-            education.append(keyword)
+    if isinstance(education_lines, str):
+        lines = [line.strip() for line in education_lines.split("\n") if line.strip()]
+    else:
+        lines = [line.strip() for line in education_lines if line.strip()]
+
+    i = 0
+
+    while i < len(lines):
+        line = lines[i]
+
+        # Detect the start of an education record
+        if (
+            "b.tech" in line.lower()
+            or "btech" in line.lower()
+            or "class 12" in line.lower()
+            or "class xii" in line.lower()
+            or "class 10" in line.lower()
+            or "class x" in line.lower()
+        ):
+
+            degree = line
+            college = lines[i - 1] if i > 0 else ""
+
+            year = ""
+            cgpa = ""
+
+            if i + 1 < len(lines):
+                year_match = re.search(
+                    r"(20\d{2}\s*[-–]\s*20\d{2}|20\d{2})",
+                    lines[i + 1]
+                )
+                if year_match:
+                    year = year_match.group(1)
+
+            j = i + 1
+            while j < min(i + 5, len(lines)):
+                cgpa_match = re.search(
+                    r"(CGPA|GPA)\s*[:\-]?\s*(\d+(\.\d+)?)",
+                    lines[j],
+                    re.IGNORECASE,
+                )
+
+                if cgpa_match:
+                    cgpa = cgpa_match.group(2)
+                    break
+
+                j += 1
+
+            education.append({
+                "degree": degree,
+                "college": college,
+                "year": year,
+                "cgpa": cgpa,
+            })
+
+        i += 1
 
     return education
 
-
 def extract_projects(project_lines):
+
     projects = []
 
     if not project_lines:
@@ -89,8 +140,6 @@ def parse_resume(text):
     skills = extract_skills(
         "\n".join(sections.get("skills", []))
     )
-    print(skills)
-    print(type(skills[0]))
 
     projects = extract_projects(
         sections.get("projects", [])

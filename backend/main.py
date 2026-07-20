@@ -1,14 +1,16 @@
+from typing import Optional
+from io import BytesIO
 
-from section_parser import extract_sections
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from pypdf import PdfReader
-from io import BytesIO
+
+from section_parser import extract_sections
 from parser import parse_resume
 from analyzer import calculate_score
+from matcher import compare
 
 app = FastAPI()
-
 
 app.add_middleware(
     CORSMiddleware,
@@ -27,7 +29,6 @@ def home():
 
 
 def clean_text(text):
-   
     text = text.replace("|", " ")
 
     lines = []
@@ -42,8 +43,11 @@ def clean_text(text):
 
 
 @app.post("/upload")
-async def upload_resume(file: UploadFile = File(...)):
-
+async def upload_resume(
+    file: UploadFile = File(...),
+    job_description: Optional[str] = Form(None)
+):
+    # Read uploaded PDF
     contents = await file.read()
 
     pdf = PdfReader(BytesIO(contents))
@@ -54,6 +58,7 @@ async def upload_resume(file: UploadFile = File(...)):
         text += page.extract_text() or ""
 
     text = clean_text(text)
+
     print("=" * 80)
     print("RAW RESUME TEXT")
     print(text)
@@ -65,12 +70,23 @@ async def upload_resume(file: UploadFile = File(...)):
     print(sections)
     print("=" * 100)
 
+    # Resume Analysis
     resume_data = parse_resume(text)
+    print("Resume skills:")
+    print(resume_data["skills"])
+    print(type(resume_data["skills"]))
     analysis = calculate_score(resume_data)
 
+    # Job Description Matching
+    job_match = compare(
+        resume_data["skills"],
+        job_description or ""
+    )
+
     return {
-    "filename": file.filename,
-    "message": "Resume analyzed successfully",
-    "resume_data": resume_data,
-    "analysis": analysis
-}
+        "filename": file.filename,
+        "message": "Resume analyzed successfully",
+        "resume_data": resume_data,
+        "analysis": analysis,
+        "job_match": job_match
+    }

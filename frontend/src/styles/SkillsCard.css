@@ -1,0 +1,24 @@
+.skills-card{
+    background:white;
+    padding:25px;
+    margin-top:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.skill-row{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #eee;
+}
+
+.implemented{
+    color:green;
+    font-weight:bold;
+}
+
+.not-implemented{
+    color:red;
+    font-weight:bold;
+}

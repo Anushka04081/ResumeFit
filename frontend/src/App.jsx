@@ -1,56 +1,94 @@
+import "./App.css";
 import { useState } from "react";
 import axios from "axios";
+import ScoreCard from "./components/ScoreCard";
+import SkillsCard from "./components/SkillsCard";
+import StrengthCard from "./components/StrengthCard";
+import ProjectCard from "./components/ProjectCard";
+import EducationCard from "./components/EducationCard";
+import JobMatchCard from "./components/JobMatchCard";
+
+
+
+
 
 function App() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
+  const [jobDescription, setJobDescription] = useState("");
 
   const handleUpload = async () => {
-    if (!file) {
-      alert("Please select a resume.");
-      return;
+  console.log("Button clicked!");
+
+  if (!file) {
+    alert("Please select a resume.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("job_description", jobDescription);
+
+  console.log(formData.get("file"));
+  console.log(formData.get("job_description"));
+
+  try {
+    const response = await axios.post(
+      "http://127.0.0.1:8000/upload",
+      formData
+    );
+
+    console.log(response.data);
+    console.log(response.data);
+    setResult(response.data);
+
+  } catch (err) {
+    console.error(err);
+
+    if (err.response) {
+      console.log(err.response.data);
+      alert(JSON.stringify(err.response.data));
+    } else {
+      alert(err.message);
     }
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const response = await axios.post(
-        "http://127.0.0.1:8000/upload",
-        formData
-      );
-
-      setResult(response.data);
-    } catch (err) {
-      console.error(err);
-      alert("Upload failed.");
-    }
-  };
+  }
+};
 
   return (
-    <div style={{ padding: "40px" }}>
+    <div className="container">
       <h1>ResumeFit</h1>
 
       <input
         type="file"
-        accept=".pdf"
         onChange={(e) => setFile(e.target.files[0])}
       />
 
-      <br />
-      <br />
+      <textarea
+        placeholder="Paste the Job Description here..."
+        value={jobDescription}
+        onChange={(e) => setJobDescription(e.target.value)}
+        rows={8}
+      />
 
       <button onClick={handleUpload}>
         Analyze Resume
       </button>
 
       {result && (
-        <div style={{ marginTop: "30px" }}>
-          <h2>Analysis Result</h2>
+    <>
+      <ScoreCard score={result.analysis.overall_score} />
 
-          <pre>{JSON.stringify(result, null, 2)}</pre>
-        </div>
-      )}
+      <JobMatchCard jobMatch={result.job_match} />
+
+      <SkillsCard skills={result.resume_data.skills} />
+
+      <StrengthCard analysis={result.analysis} />
+
+      <ProjectCard projects={result.resume_data.projects} />
+
+      <EducationCard education={result.resume_data.education} />
+    </>
+)}
     </div>
   );
 }

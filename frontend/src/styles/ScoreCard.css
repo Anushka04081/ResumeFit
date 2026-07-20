@@ -1,0 +1,22 @@
+.score-card{
+    background:white;
+    border-radius:15px;
+    padding:25px;
+    margin-top:30px;
+    text-align:center;
+    box-shadow:0 5px 15px rgba(0,0,0,.1);
+}
+
+.score-circle{
+    width:150px;
+    height:150px;
+    border-radius:50%;
+    border:10px solid #2563eb;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin:20px auto;
+    font-size:35px;
+    font-weight:bold;
+    color:#2563eb;
+}
