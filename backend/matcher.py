@@ -49,13 +49,17 @@ def compare(resume_skills, job_description):
     missing = sorted(list(jd_skills - extracted_resume_skills))
     extra = sorted(list(extracted_resume_skills - jd_skills))
 
-    score = 0
     if jd_skills:
         score = round((len(matched) / len(jd_skills)) * 100)
+    else:
+        score = 100
+
+    skill_score = int((score / 100) * 20)
 
     return {
         "match_score": score,
         "matched_skills": matched,
         "missing_skills": missing,
         "extra_skills": extra,
+        "skill_score": skill_score,
     }

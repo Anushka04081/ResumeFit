@@ -1,0 +1,64 @@
+.job-card {
+    background: white;
+    border-radius: 18px;
+    padding: 30px;
+    margin-top: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+}
+
+.job-card h2 {
+    text-align: center;
+    color: #1f2937;
+    margin-bottom: 25px;
+}
+
+.match-score {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #2563eb;
+    color: white;
+    font-size: 34px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto 30px;
+}
+
+.skill-section {
+    margin-top: 25px;
+}
+
+.skill-section h3 {
+    margin-bottom: 12px;
+    color: #374151;
+}
+
+.badge-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.badge {
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.matched {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.missing {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.extra {
+    background: #dbeafe;
+    color: #1d4ed8;
+}

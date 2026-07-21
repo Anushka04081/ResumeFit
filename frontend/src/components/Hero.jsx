@@ -1,22 +1,35 @@
 import "./Hero.css";
 
-function Hero({ title, description, buttonText }) {
+function Hero() {
   return (
     <section className="hero">
+
       <div className="hero-content">
-        <h1>{title}</h1>
 
-        <p>{description}</p>
+        <h1>
+          Analyze Your Resume
+          <span> Like a Recruiter</span>
+        </h1>
 
-        <button>{buttonText}</button>
+        <p>
+          ResumeFit helps you evaluate your resume, compare it with any
+          job description, identify missing skills, and improve your ATS
+          score in seconds.
+        </p>
+
+        <button>Analyze Resume</button>
+
       </div>
 
       <div className="hero-image">
+
         <img
-          src="https://placehold.co/400x300"
-          alt="Resume Illustration"
+          src="https://undraw.co/api/illustrations/undraw_resume_re_hkth.svg"
+          alt="Resume Analysis"
         />
+
       </div>
+
     </section>
   );
 }

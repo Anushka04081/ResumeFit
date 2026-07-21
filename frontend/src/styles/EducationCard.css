@@ -1,16 +1,38 @@
-.education-card{
-    background:white;
-    margin-top:25px;
-    padding:25px;
-    border-radius:15px;
-    box-shadow:0 5px 15px rgba(0,0,0,.1);
+.education-card {
+    background: white;
+    margin-top: 30px;
+    padding: 30px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
 }
 
-.education-card h2{
-    color:#2563eb;
-    margin-bottom:15px;
+.education-card h2 {
+    text-align: center;
+    color: #1f2937;
+    margin-bottom: 25px;
 }
 
-.education-card li{
-    margin:8px 0;
+.education-item {
+    background: #f8fafc;
+    border-left: 6px solid #2563eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.education-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15);
+}
+
+.education-item h3 {
+    color: #2563eb;
+    margin-bottom: 15px;
+}
+
+.education-item p {
+    margin: 8px 0;
+    color: #4b5563;
+    line-height: 1.6;
 }

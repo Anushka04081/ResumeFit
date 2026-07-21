@@ -72,15 +72,26 @@ async def upload_resume(
 
     # Resume Analysis
     resume_data = parse_resume(text)
+
+    print(resume_data["education"])
     print("Resume skills:")
     print(resume_data["skills"])
     print(type(resume_data["skills"]))
+
     analysis = calculate_score(resume_data)
 
     # Job Description Matching
     job_match = compare(
         resume_data["skills"],
         job_description or ""
+    )
+
+    # Update skill score based on job match
+    analysis["score_breakdown"]["skills"] = job_match["skill_score"]
+
+    # Recalculate overall score
+    analysis["overall_score"] = sum(
+        analysis["score_breakdown"].values()
     )
 
     return {

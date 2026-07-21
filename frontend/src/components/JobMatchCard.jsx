@@ -1,24 +1,61 @@
+import "../styles/JobMatchCard.css";
+
 function JobMatchCard({ jobMatch }) {
   return (
-    <div className="card">
-      <h2>Job Match</h2>
+    <div className="job-card">
+      <h2>🎯 Job Match Analysis</h2>
 
-      <h3>Match Score: {jobMatch.match_score}%</h3>
+      <div className="match-score">
+        {jobMatch.match_score}%
+      </div>
 
-      <p>
-        <strong>Matched Skills:</strong>{" "}
-        {jobMatch.matched_skills.join(", ") || "None"}
-      </p>
+      <div className="skill-section">
+        <h3>✅ Matched Skills</h3>
 
-      <p>
-        <strong>Missing Skills:</strong>{" "}
-        {jobMatch.missing_skills.join(", ") || "None"}
-      </p>
+        <div className="badge-container">
+          {jobMatch.matched_skills.length ? (
+            jobMatch.matched_skills.map((skill, index) => (
+              <span key={index} className="badge matched">
+                {skill}
+              </span>
+            ))
+          ) : (
+            <p>None</p>
+          )}
+        </div>
+      </div>
 
-      <p>
-        <strong>Extra Skills:</strong>{" "}
-        {jobMatch.extra_skills.join(", ") || "None"}
-      </p>
+      <div className="skill-section">
+        <h3>❌ Missing Skills</h3>
+
+        <div className="badge-container">
+          {jobMatch.missing_skills.length ? (
+            jobMatch.missing_skills.map((skill, index) => (
+              <span key={index} className="badge missing">
+                {skill}
+              </span>
+            ))
+          ) : (
+            <p>None</p>
+          )}
+        </div>
+      </div>
+
+      <div className="skill-section">
+        <h3>💡 Extra Skills</h3>
+
+        <div className="badge-container">
+          {jobMatch.extra_skills.length ? (
+            jobMatch.extra_skills.map((skill, index) => (
+              <span key={index} className="badge extra">
+                {skill}
+              </span>
+            ))
+          ) : (
+            <p>None</p>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

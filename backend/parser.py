@@ -49,9 +49,10 @@ def extract_skills(text):
     return skills
 
 
-import re
+
 
 def extract_education(education_lines):
+
     education = []
 
     if not education_lines:
@@ -62,57 +63,62 @@ def extract_education(education_lines):
     else:
         lines = [line.strip() for line in education_lines if line.strip()]
 
-    i = 0
+    degree_keywords = [
+        "b.tech", "btech", "b.e", "be", "m.tech", "mtech",
+        "class 12", "class xii", "class 10", "class x"
+    ]
 
-    while i < len(lines):
-        line = lines[i]
+    current = None
 
-        # Detect the start of an education record
-        if (
-            "b.tech" in line.lower()
-            or "btech" in line.lower()
-            or "class 12" in line.lower()
-            or "class xii" in line.lower()
-            or "class 10" in line.lower()
-            or "class x" in line.lower()
-        ):
+    for line in lines:
 
-            degree = line
-            college = lines[i - 1] if i > 0 else ""
+        lower = line.lower()
 
-            year = ""
-            cgpa = ""
+        # Start of a new education entry
+        if any(keyword in lower for keyword in degree_keywords):
 
-            if i + 1 < len(lines):
+            if current:
+                education.append(current)
+
+            current = {
+                "degree": line,
+                "college": "",
+                "year": "",
+                "cgpa": ""
+            }
+
+        elif current is not None:
+
+            if current["year"] == "":
                 year_match = re.search(
                     r"(20\d{2}\s*[-–]\s*20\d{2}|20\d{2})",
-                    lines[i + 1]
+                    line
                 )
-                if year_match:
-                    year = year_match.group(1)
 
-            j = i + 1
-            while j < min(i + 5, len(lines)):
+                if year_match:
+                    current["year"] = year_match.group(1)
+
+            if current["cgpa"] == "":
                 cgpa_match = re.search(
                     r"(CGPA|GPA)\s*[:\-]?\s*(\d+(\.\d+)?)",
-                    lines[j],
-                    re.IGNORECASE,
+                    line,
+                    re.IGNORECASE
                 )
 
                 if cgpa_match:
-                    cgpa = cgpa_match.group(2)
-                    break
+                    current["cgpa"] = cgpa_match.group(2)
 
-                j += 1
+            if (
+                current["college"] == ""
+                and "cgpa" not in lower
+                and "board" not in lower
+                and "%" not in line
+                and not re.search(r"20\d{2}", line)
+            ):
+                current["college"] = line
 
-            education.append({
-                "degree": degree,
-                "college": college,
-                "year": year,
-                "cgpa": cgpa,
-            })
-
-        i += 1
+    if current:
+        education.append(current)
 
     return education
 

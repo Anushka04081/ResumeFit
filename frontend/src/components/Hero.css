@@ -4,7 +4,7 @@
     align-items: center;
     padding: 80px 60px;
     min-height: calc(100vh - 90px);
-    background: #f4f7fc;
+    background: linear-gradient(135deg, #f8fbff 0%, #eef5ff 100%);
 }
 
 .hero-content {
@@ -35,12 +35,16 @@
     background: #2563eb;
     color: white;
     cursor: pointer;
-    transition: 0.3s ease;
+    transition: all 0.3s ease;
+}
+.hero-content h1 span {
+    color: #2563eb;
 }
 
 .hero-content button:hover {
     background: #1d4ed8;
-    transform: translateY(-2px);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
 }
 
 .hero-image {
@@ -52,6 +56,7 @@
 .hero-image img {
     width: 500px;
     max-width: 100%;
+    filter: drop-shadow(0 20px 35px rgba(37, 99, 235, 0.15));
 }
 
 /* Responsive */

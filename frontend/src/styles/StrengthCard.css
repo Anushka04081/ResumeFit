@@ -1,24 +1,49 @@
 .strength-card {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.card-section {
     background: white;
+    border-radius: 18px;
     padding: 25px;
-    margin-top: 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0,0,0,.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    transition: all .3s ease;
 }
 
-.card-section{
-    margin-bottom:20px;
+.card-section:hover {
+    transform: translateY(-5px);
 }
 
-.card-section h2{
-    color:#2563eb;
-    margin-bottom:10px;
+.card-section h2 {
+    margin-bottom: 18px;
 }
 
-.card-section ul{
-    padding-left:20px;
+.card-section ul {
+    list-style: none;
+    padding: 0;
 }
 
-.card-section li{
-    margin:8px 0;
+.card-section li {
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    line-height: 1.5;
+}
+
+.strengths li {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.improvements li {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.missing li {
+    background: #fee2e2;
+    color: #991b1b;
 }

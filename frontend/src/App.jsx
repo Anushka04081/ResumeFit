@@ -16,8 +16,10 @@ function App() {
   const [file, setFile] = useState(null);
   const [result, setResult] = useState(null);
   const [jobDescription, setJobDescription] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleUpload = async () => {
+    setLoading(true);
   console.log("Button clicked!");
 
   if (!file) {
@@ -33,13 +35,14 @@ function App() {
   console.log(formData.get("job_description"));
 
   try {
+    
     const response = await axios.post(
       "http://127.0.0.1:8000/upload",
       formData
     );
 
     console.log(response.data);
-    console.log(response.data);
+  
     setResult(response.data);
 
   } catch (err) {
@@ -52,6 +55,9 @@ function App() {
       alert(err.message);
     }
   }
+  finally {
+    setLoading(false);
+  }  
 };
 
   return (
@@ -70,25 +76,24 @@ function App() {
         rows={8}
       />
 
-      <button onClick={handleUpload}>
-        Analyze Resume
+      <button
+        onClick={handleUpload}
+        disabled={loading}
+      >
+        {loading ? "Analyzing Resume..." : "Analyze Resume"}
       </button>
 
       {result && (
-    <>
-      <ScoreCard score={result.analysis.overall_score} />
-
-      <JobMatchCard jobMatch={result.job_match} />
-
-      <SkillsCard skills={result.resume_data.skills} />
-
-      <StrengthCard analysis={result.analysis} />
-
-      <ProjectCard projects={result.resume_data.projects} />
-
-      <EducationCard education={result.resume_data.education} />
-    </>
-)}
+        <>
+          <ScoreCard score={result.analysis.overall_score} />
+          
+          <JobMatchCard jobMatch={result.job_match} />
+          <SkillsCard skills={result.resume_data.skills} />
+          <StrengthCard analysis={result.analysis} />
+          <ProjectCard projects={result.resume_data.projects} />
+          <EducationCard education={result.resume_data.education} />
+        </>
+      )}
     </div>
   );
 }

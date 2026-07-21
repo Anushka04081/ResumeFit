@@ -3,7 +3,8 @@ import "../styles/StrengthCard.css";
 function StrengthCard({ analysis }) {
   return (
     <div className="strength-card">
-      <div className="card-section">
+
+      <div className="card-section strengths">
         <h2>✅ Strengths</h2>
 
         <ul>
@@ -13,7 +14,7 @@ function StrengthCard({ analysis }) {
         </ul>
       </div>
 
-      <div className="card-section">
+      <div className="card-section improvements">
         <h2>⚠️ Improvements</h2>
 
         <ul>
@@ -23,7 +24,7 @@ function StrengthCard({ analysis }) {
         </ul>
       </div>
 
-      <div className="card-section">
+      <div className="card-section missing">
         <h2>📌 Missing Sections</h2>
 
         <ul>
@@ -32,6 +33,7 @@ function StrengthCard({ analysis }) {
           ))}
         </ul>
       </div>
+
     </div>
   );
 }

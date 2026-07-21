@@ -3,17 +3,27 @@ import "../styles/SkillsCard.css";
 function SkillsCard({ skills }) {
   return (
     <div className="skills-card">
-      <h2>Skills</h2>
+      <h2>🛠 Technical Skills</h2>
 
       {skills.map((skill, index) => (
         <div key={index} className="skill-row">
-          <span>{skill.name}</span>
 
-          {skill.implemented ? (
-            <span className="implemented">✅ Implemented</span>
-          ) : (
-            <span className="not-implemented">❌ Mentioned Only</span>
-          )}
+          <div className="skill-name">
+            {skill.name}
+          </div>
+
+          <div
+            className={
+              skill.implemented
+                ? "implemented"
+                : "not-implemented"
+            }
+          >
+            {skill.implemented
+              ? "✅ Implemented"
+              : "🟡 Mentioned Only"}
+          </div>
+
         </div>
       ))}
     </div>

@@ -13,7 +13,7 @@ def calculate_score(resume_data):
     improvements = []
     missing_sections = []
 
-    # ---------------- Contact ----------------
+    # ---------- Contact (10) ----------
     if resume_data.get("name"):
         breakdown["contact"] += 3
 
@@ -28,35 +28,20 @@ def calculate_score(resume_data):
     else:
         improvements.append("Complete your contact information")
 
-    # ---------------- Skills ----------------
+    # ---------- Skills (30) ----------
     skills = resume_data.get("skills", [])
+    print("Skills:", resume_data.get("skills"))
+    implemented = sum(1 for skill in skills if skill.get("implemented"))
+    mentioned = sum(1 for skill in skills if skill.get("mentioned"))
 
-    implemented_skills = 0
+    breakdown["skills"] = min(30, implemented * 5 + (mentioned - implemented) * 2)
 
-    for skill in skills:
-        if skill["implemented"]:
-            implemented_skills += 1
-
-    if implemented_skills >= 8:
-        breakdown["skills"] = 20
-        strengths.append("Excellent practical technical skills")
-
-    elif implemented_skills >= 5:
-        breakdown["skills"] = 15
+    if breakdown["skills"] >= 20:
         strengths.append("Good practical technical skills")
-
-    elif implemented_skills >= 3:
-        breakdown["skills"] = 10
-        strengths.append("Basic practical technical skills")
+    else:
         improvements.append("Implement more listed skills in projects")
 
-    elif implemented_skills >= 1:
-        breakdown["skills"] = 5
-        improvements.append("Strengthen technical projects")
-
-    else:
-        improvements.append("Add practical implementation of your skills")
-    # ---------------- Projects ----------------
+    # ---------- Projects (20) ----------
     projects = resume_data.get("projects", [])
 
     if len(projects) >= 2:
@@ -72,7 +57,7 @@ def calculate_score(resume_data):
         missing_sections.append("Projects")
         improvements.append("Add practical projects")
 
-    # ---------------- Education ----------------
+    # ---------- Education (10) ----------
     education = resume_data.get("education", [])
 
     if education:
@@ -81,7 +66,7 @@ def calculate_score(resume_data):
     else:
         missing_sections.append("Education")
 
-    # ---------------- Experience ----------------
+    # ---------- Experience (20) ----------
     experience_keywords = [
         "internship",
         "experience",
@@ -101,10 +86,26 @@ def calculate_score(resume_data):
         improvements.append("Add internship or work experience")
         missing_sections.append("Experience")
 
-    # ---------------- Achievements ----------------
-    breakdown["achievements"] = 0
-    improvements.append("Add certifications or achievements")
-    missing_sections.append("Achievements")
+    # ---------- Achievements (10) ----------
+    achievement_keywords = [
+        "certificate",
+        "certification",
+        "achievement",
+        "award",
+        "hackathon"
+    ]
+
+    has_achievement = any(
+        word in str(resume_data).lower()
+        for word in achievement_keywords
+    )
+
+    if has_achievement:
+        breakdown["achievements"] = 10
+        strengths.append("Certifications/Achievements included")
+    else:
+        improvements.append("Add certifications or achievements")
+        missing_sections.append("Achievements")
 
     overall_score = sum(breakdown.values())
 
